@@ -1,97 +1,3 @@
-// "use client";
-
-// import { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { AppDispatch, RootState } from "@/redux/store";
-// import { fetchUsers, deleteUser } from "@/redux/slices/userSlice";
-// import { useRouter } from "next/navigation";
-// import { Button } from "@/components/ui/button";
-// import { Plus, Edit, Trash2 } from "lucide-react";
-
-
-// export default function UsersPage() {
-//   const dispatch = useDispatch<AppDispatch>();
-//   const router = useRouter();
-//   const { users, loading, error } = useSelector((state: RootState) => state.user);
-
-//   useEffect(() => {
-//     dispatch(fetchUsers());
-//   }, [dispatch]);
-
-//   const handleCreate = () => router.push("/users/create");
-//   const handleEdit = (id: number) => router.push(`/users/${id}`);
-//   const handleDelete = (id: number) => {
-//     if (!confirm("Are you sure you want to delete this user?")) return;
-//     dispatch(deleteUser(id));
-//   };
-
-//   return (
-//     <>
-
-//       <div className="p-6 max-w-5xl mx-auto w-full">
-//         <div className="flex items-center justify-between mb-6">
-//           <h1 className="text-2xl font-bold">User Management</h1>
-//           <Button
-//             className="hover:cursor-pointer hover:bg-gray-700 flex items-center gap-2"
-//             onClick={handleCreate}
-//           >
-//             <Plus size={16} /> Create User
-//           </Button>
-//         </div>
-
-//         {loading && <p className="text-gray-500">Loading users...</p>}
-//         {error && <p className="text-red-500">{error}</p>}
-//         {!loading && users.length === 0 && <p className="text-gray-500">No users found.</p>}
-
-//         {!loading && users.length > 0 && (
-//           <div className="overflow-x-auto">
-//             <table className="min-w-full border text-center border-gray-200 rounded">
-//               <thead className="bg-gray-100">
-//                 <tr>
-//                   <th className="py-3 px-4 border-b">ID</th>
-//                   <th className="py-3 px-4 border-b">Name</th>
-//                   <th className="py-3 px-4 border-b">Email</th>
-//                   <th className="py-3 px-4 border-b">Actions</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {users.map((user) => (
-//                   <tr key={user.id} className="hover:bg-gray-50">
-//                     <td className="py-3 px-4 border-b">{user.id}</td>
-//                     <td className="py-3 px-4 border-b">{user.name}</td>
-//                     <td className="py-3 px-4 border-b">{user.email}</td>
-//                     <td className="py-3 px-4 border-b space-x-2 flex  justify-center">
-//                       <Button
-//                         className="hover:cursor-pointer hover:bg-gray-700 flex items-center gap-1"
-//                         size="sm"
-//                         onClick={() => handleEdit(user.id)}
-//                       >
-//                         <Edit size={14} /> Edit
-//                       </Button>
-//                       <Button
-//                         className="hover:cursor-pointer hover:bg-red-500 flex items-center gap-1"
-//                         size="sm"
-//                         variant="destructive"
-//                         onClick={() => handleDelete(user.id)}
-//                       >
-//                         <Trash2 size={14} /> Delete
-//                       </Button>
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         )}
-//       </div>
-//     </>
-//   );
-// }
-
-
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -123,7 +29,6 @@ export default function UsersPage() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  // ⭐ PAGINATION STATE
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage, setUsersPerPage] = useState(5);
 
@@ -133,7 +38,7 @@ export default function UsersPage() {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  // ⭐ PAGINATION LOGIC
+
   const totalPages = Math.ceil(users.length / usersPerPage);
   const currentUsers = users.slice(
     (currentPage - 1) * usersPerPage,
@@ -234,14 +139,14 @@ export default function UsersPage() {
               </PaginationContent>
             </Pagination>
 
-            {/* Rows per page selector using shadcn */}
+           
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">Rows per page:</span>
               <Select
                 value={usersPerPage.toString()}
                 onValueChange={(val) => {
                   setUsersPerPage(Number(val));
-                  setCurrentPage(1); // Reset to first page
+                  setCurrentPage(1); 
                 }}
               >
                 <SelectTrigger className="w-[100px]">
