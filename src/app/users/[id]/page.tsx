@@ -78,7 +78,7 @@ export default function UpdateUserPage() {
                 <FormControl>
                   <Input placeholder="you@example.com" {...field} />
                 </FormControl>
-                <FormDescription>We'll never share your email.</FormDescription>
+                <FormDescription>Email should be in proper format</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

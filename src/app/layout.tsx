@@ -1,8 +1,8 @@
 import "./globals.css";
 import ReduxProvider from "@/redux/Provider";
 import Navbar from "@/components/Navbar";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Sidebar from "@/components/Sidebar";
 
 export default function RootLayout({
   children,
@@ -11,14 +11,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen">
-        <ReduxProvider>
-          <Navbar />
-          <Header />
-          <main className="flex-1 px-4 md:px-8 py-6">{children}</main>
-          <Footer />
-        </ReduxProvider>
-      </body>
+    
+    <body className="flex flex-col h-screen">
+  <ReduxProvider>
+    <Navbar />
+
+    <div className="flex flex-1 min-h-0">
+      <Sidebar />
+      <main className="flex-1 px-4 md:px-8 py-6 overflow-auto">
+        {children}
+      </main>
+    </div>
+
+    <Footer />
+  </ReduxProvider>
+</body>
+
+
     </html>
   );
 }

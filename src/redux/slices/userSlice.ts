@@ -17,9 +17,9 @@ const initialState: UserState = {
   error: null,
 };
 
-/* =====================================================
-   1. FETCH ALL USERS
-===================================================== */
+
+  //  1. FETCH ALL USERS
+
 export const fetchUsers = createAsyncThunk<User[]>(
   "users/fetchUsers",
   async () => {
