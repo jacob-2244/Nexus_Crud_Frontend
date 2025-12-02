@@ -91,6 +91,7 @@
 
 
 
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -103,12 +104,20 @@ import { Plus, Edit, Trash2 } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function UsersPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -116,7 +125,7 @@ export default function UsersPage() {
 
   // ⭐ PAGINATION STATE
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5;
+  const [usersPerPage, setUsersPerPage] = useState(5);
 
   const { users, loading, error } = useSelector((state: RootState) => state.user);
 
@@ -126,9 +135,10 @@ export default function UsersPage() {
 
   // ⭐ PAGINATION LOGIC
   const totalPages = Math.ceil(users.length / usersPerPage);
-  const indexOfLast = currentPage * usersPerPage;
-  const indexOfFirst = indexOfLast - usersPerPage;
-  const currentUsers = users.slice(indexOfFirst, indexOfLast);
+  const currentUsers = users.slice(
+    (currentPage - 1) * usersPerPage,
+    currentPage * usersPerPage
+  );
 
   const handleCreate = () => router.push("/users/create");
   const handleEdit = (id: number) => router.push(`/users/${id}`);
@@ -139,7 +149,6 @@ export default function UsersPage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto w-full">
-
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">User Management</h1>
@@ -192,8 +201,8 @@ export default function UsersPage() {
             </table>
           </div>
 
-        
-          <div className="mt-6 flex justify-center">
+          {/* Pagination + Rows Per Page */}
+          <div className="mt-6 flex items-center justify-between">
             <Pagination>
               <PaginationContent>
                 {/* Prev */}
@@ -224,6 +233,31 @@ export default function UsersPage() {
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
+
+            {/* Rows per page selector using shadcn */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Rows per page:</span>
+              <Select
+                value={usersPerPage.toString()}
+                onValueChange={(val) => {
+                  setUsersPerPage(Number(val));
+                  setCurrentPage(1); // Reset to first page
+                }}
+              >
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {[5, 10, 15, 20].map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </>
       )}
