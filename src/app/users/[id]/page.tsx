@@ -59,9 +59,9 @@ export default function UpdateUserPage() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className="text-black">Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter name" {...field} />
+                  <Input className="text-black" placeholder="Enter name" {...field} />
                 </FormControl>
                 <FormDescription>Display name min 2 characters.</FormDescription>
                 <FormMessage />
@@ -74,9 +74,9 @@ export default function UpdateUserPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-black">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" {...field} />
+                  <Input className="text-black" placeholder="you@example.com" {...field} />
                 </FormControl>
                 <FormDescription>Email should be in proper format</FormDescription>
                 <FormMessage />

@@ -74,27 +74,27 @@ export default function UsersPage() {
             <table className="min-w-full border text-center border-gray-200 rounded">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-4 border-b">ID</th>
-                  <th className="py-3 px-4 border-b">Name</th>
-                  <th className="py-3 px-4 border-b">Email</th>
-                  <th className="py-3 px-4 border-b">Actions</th>
+                  <th className="text-black py-3 px-4 border-b">ID</th>
+                  <th className="text-black py-3 px-4 border-b">Name</th>
+                  <th className="text-black py-3 px-4 border-b">Email</th>
+                  <th className="text-black py-3 px-4 border-b">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
                 {currentUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} >
                     <td className="py-3 px-4 border-b">{user.id}</td>
                     <td className="py-3 px-4 border-b">{user.name}</td>
                     <td className="py-3 px-4 border-b">{user.email}</td>
                     <td className="py-3 px-4 border-b flex justify-center gap-2">
-                      <Button size="sm" onClick={() => handleEdit(user.id)} className="flex gap-1">
+                      <Button size="sm" onClick={() => handleEdit(user.id)} className="flex gap-1 hover:cursor-pointer">
                         <Edit size={14} /> Edit
                       </Button>
                       <Button
                         size="sm"
                         variant="destructive"
-                        className="flex gap-1"
+                        className="flex gap-1 hover:cursor-pointer"
                         onClick={() => handleDelete(user.id)}
                       >
                         <Trash2 size={14} /> Delete

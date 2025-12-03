@@ -47,7 +47,7 @@ export default function CreateUserPage() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className="text-black">Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter name" {...field} />
                 </FormControl>
@@ -62,9 +62,9 @@ export default function CreateUserPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-black">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" {...field} />
+                  <Input className="text-black" placeholder="you@example.com" {...field} />
                 </FormControl>
                 <FormDescription>We'll never share your email.</FormDescription>
                 <FormMessage />

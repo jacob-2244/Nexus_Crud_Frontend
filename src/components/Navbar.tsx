@@ -1,43 +1,53 @@
-"use client"
-import { useState } from "react";
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
-// import { HiMenu, HiX } from "react-icons/hi";
 import Image from "next/image";
+import { Moon, Sun } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { toggleTheme, setTheme } from "@/redux/slices/themeSlice";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const theme = useSelector((state: RootState) => state.theme.mode);
+
+  // Load saved theme on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("theme") as "light" | "dark";
+    if (saved) dispatch(setTheme(saved));
+  }, [dispatch]);
+
+  // Save theme whenever it changes
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   return (
-    <nav className="bg-black text-white px-4 py-2 flex justify-between items-center overflow-hidden position-fixed h-16">
+    <nav
+      className={` ${theme==="dark"? "bg-black text-white": "bg-gray-100 text-black"}px-4 py-2 flex justify-between items-center overflow-hidden position-fixed h-16 `}
+    >
       <div className="text-2xl font-bold">
         <Link href="/">NexusCRUD</Link>
       </div>
 
-      <div className="w-12 h-12 rounded-full relative">
-        <Image className="absolute rounded-full" src="/assets/profile.jpeg" alt="" fill />
+      <div className="flex gap-30">
+        <button
+          className="p-4 rounded-lg hover:cursor-pointer"
+          onClick={() => dispatch(toggleTheme())}
+        >
+          {theme === "dark" ? <Sun /> : <Moon />}
+        </button>
 
-      </div>
-{/* 
-  
-      <div className="hidden md:flex space-x-6">
-        <Link href="/" className="hover:text-gray-200">Dashboard</Link>
-        <Link href="/users" className="hover:text-gray-200">Users</Link>
-        <Link href="/about" className="hover:text-gray-200">About</Link>
-      </div>
-
-  
-      <div className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <HiX size={28} /> : <HiMenu size={28} />}
-      </div>
-
-      
-      {isOpen && (
-        <div className="absolute top-16 left-0 w-full bg-black flex flex-col items-center py-4 md:hidden space-y-4">
-          <Link href="/" className="hover:text-gray-200" onClick={() => setIsOpen(false)}>Dashboard</Link>
-          <Link href="/users" className="hover:text-gray-200" onClick={() => setIsOpen(false)}>Users</Link>
-          <Link href="/about" className="hover:text-gray-200" onClick={() => setIsOpen(false)}>About</Link>
+        <div className="w-12 h-12 rounded-full relative">
+          <Image
+            className="absolute rounded-full"
+            src="/assets/profile.jpeg"
+            alt=""
+            fill
+          />
         </div>
-      )} */}
+      </div>
     </nav>
   );
 };
