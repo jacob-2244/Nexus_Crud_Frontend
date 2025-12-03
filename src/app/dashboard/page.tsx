@@ -16,18 +16,18 @@ const Dashboard = () => {
   
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-2">Total Users</h3>
-          <p className="text-3xl font-bold ">128</p>
+          <h3 className="text-lg font-semibold mb-2 text-black">Total Users</h3>
+          <p className="text-3xl font-bold  text-black">128</p>
         </div>
 
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-2">Active Sessions</h3>
-          <p className="text-3xl font-bold ">45</p>
+          <h3 className="text-lg font-semibold mb-2 text-black">Active Sessions</h3>
+          <p className="text-3xl font-bold text-black ">45</p>
         </div>
 
         <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-2">New Registrations</h3>
-          <p className="text-3xl font-bold ">12</p>
+          <h3 className="text-lg font-semibold mb-2 text-black">New Registrations</h3>
+          <p className="text-3xl font-bold text-black ">12</p>
         </div>
       </div>
 
