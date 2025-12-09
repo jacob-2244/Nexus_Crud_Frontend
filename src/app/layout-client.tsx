@@ -1,0 +1,57 @@
+// @/app/layout-client.tsx
+"use client";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/components/Theme-provider";
+
+export default function LayoutClient({ children }: { children: React.ReactNode }) {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Select each value separately for better debugging
+  const sidebarPosition = useSelector((state: RootState) => {
+    console.log("Selector - Full state:", state);
+    return state?.ui?.sidebarPosition || "left";
+  });
+  
+  const showFooter = useSelector((state: RootState) => {
+    return state?.ui?.showFooter ?? true;
+  });
+
+  useEffect(() => {
+    setIsMounted(true);
+    console.log("LayoutClient mounted");
+  }, []);
+
+ 
+  useEffect(() => {
+    console.log("=== LAYOUT STATE CHANGED ===");
+    console.log("isMounted:", isMounted);
+    console.log("sidebarPosition:", sidebarPosition);
+    console.log("showFooter:", showFooter);
+  }, [sidebarPosition, showFooter, isMounted]);
+
+  const containerClass = `flex flex-1 min-h-0 mt-16 ${
+    isMounted && sidebarPosition === "right" ? "flex-row-reverse" : ""
+  }`;
+
+  console.log("Rendering with containerClass:", containerClass);
+
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <Navbar  />
+      
+      <div className={containerClass}>
+        <Sidebar />
+        <main className="flex-1 px-4 md:px-8 py-6 overflow-auto">
+          {children}
+        </main>
+      </div>
+
+      {isMounted && showFooter && <Footer />}
+    </ThemeProvider>
+  );
+}

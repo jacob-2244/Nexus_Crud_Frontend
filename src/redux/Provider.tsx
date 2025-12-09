@@ -1,12 +1,10 @@
-"use client";
 
+
+// @/redux/ReduxProvider.tsx (or wherever it is)
+"use client";
 import { Provider } from "react-redux";
 import { store } from "./store";
 
-export default function ReduxProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ReduxProvider({ children }: { children: React.ReactNode }) {
   return <Provider store={store}>{children}</Provider>;
 }

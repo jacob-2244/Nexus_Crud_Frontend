@@ -1,50 +1,67 @@
+// src/components/Navbar.tsx
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Moon, Sun } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/redux/store";
-import { toggleTheme, setTheme } from "@/redux/slices/themeSlice";
+import { ThemeToggle } from "./Theme-toggle";
+import SettingsPanel from "@/components/SettingsPanel";
+import { Settings } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 const Navbar = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const theme = useSelector((state: RootState) => state.theme.mode);
-
-  // Load saved theme on mount
+  const [open, setOpen] = useState(false);
+  const settingsRef = useRef<HTMLDivElement>(null);
+  
+  // Close panel when clicking outside
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as "light" | "dark";
-    if (saved) dispatch(setTheme(saved));
-  }, [dispatch]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
 
-  // Save theme whenever it changes
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+  
   return (
-    <nav
-      className={` ${theme==="dark"? "bg-black text-white": "bg-gray-100 text-black"}px-4 py-2 flex justify-between items-center overflow-hidden position-fixed h-16 `}
-    >
+    <nav className=" fixed w-full px-4 py-2 flex justify-between items-center h-16 bg-[var(--app-navbar)] text-[var(--text-primary)] shadow-sm  ">
       <div className="text-2xl font-bold">
-        <Link href="/">NexusCRUD</Link>
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          NexusCRUD
+        </Link>
       </div>
 
-      <div className="flex gap-30">
-        <button
-          className="p-4 rounded-lg hover:cursor-pointer"
-          onClick={() => dispatch(toggleTheme())}
-        >
-          {theme === "dark" ? <Sun /> : <Moon />}
-        </button>
+      <div className="flex items-center gap-4">
+        {/* Settings */}
+        <div className="relative" ref={settingsRef}>
+          <button 
+            onClick={() => setOpen(!open)} 
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors relative"
+            aria-label="Settings"
+            aria-expanded={open}
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+          {open && <SettingsPanel onClose={() => setOpen(false)} />}
+        </div>
+        
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
-        <div className="w-12 h-12 rounded-full relative">
+        {/* Profile Picture */}
+        <div className="w-10 h-10 rounded-full relative ring-2 ring-gray-200 dark:ring-gray-700">
           <Image
-            className="absolute rounded-full"
+            className="rounded-full object-cover"
             src="/assets/profile.jpeg"
-            alt=""
+            alt="Profile"
             fill
+            sizes="40px"
           />
         </div>
       </div>

@@ -22,7 +22,7 @@ const Dashboard = () => {
 
         <div className="bg-white shadow rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-2 text-black">Active Sessions</h3>
-          <p className="text-3xl font-bold text-black ">45</p>
+          <p className="text-3xl font-bold text-black bg-app_primary ">45</p>
         </div>
 
         <div className="bg-white shadow rounded-lg p-6">

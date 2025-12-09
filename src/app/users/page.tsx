@@ -7,6 +7,7 @@ import { fetchUsers, deleteUser } from "@/redux/slices/userSlice";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit, Trash2 } from "lucide-react";
+
 import {
   Pagination,
   PaginationContent,
@@ -32,14 +33,16 @@ export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage, setUsersPerPage] = useState(5);
 
-  const { users, loading, error } = useSelector((state: RootState) => state.user);
+  const { users, loading, error } = useSelector(
+    (state: RootState) => state.user
+  );
 
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-
   const totalPages = Math.ceil(users.length / usersPerPage);
+
   const currentUsers = users.slice(
     (currentPage - 1) * usersPerPage,
     currentPage * usersPerPage
@@ -48,53 +51,64 @@ export default function UsersPage() {
   const handleCreate = () => router.push("/users/create");
   const handleEdit = (id: number) => router.push(`/users/${id}`);
   const handleDelete = (id: number) => {
-    if (!confirm("Are you sure you want to delete this user?")) return;
+    if (!confirm("Are you sure?")) return;
     dispatch(deleteUser(id));
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto w-full">
+    <div className="p-6 max-w-5xl mx-auto w-full ">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">User Management</h1>
-        <Button className="flex items-center gap-2" onClick={handleCreate}>
+
+       <Button
+          className="flex items-center gap-2 bg-white text-black dark:bg-[var(--edit)] dark:text-white"
+          onClick={handleCreate}
+        >
           <Plus size={16} /> Create User
         </Button>
       </div>
 
-      {/* Loading / Error */}
       {loading && <p>Loading users...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && users.length === 0 && <p>No users found.</p>}
 
-      {/* Table */}
       {!loading && users.length > 0 && (
         <>
           <div className="overflow-x-auto">
             <table className="min-w-full border text-center border-gray-200 rounded">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="text-black py-3 px-4 border-b">ID</th>
-                  <th className="text-black py-3 px-4 border-b">Name</th>
-                  <th className="text-black py-3 px-4 border-b">Email</th>
-                  <th className="text-black py-3 px-4 border-b">Actions</th>
+              <thead className="bg-gray-100 dark:bg-gray-800 ">
+                <tr className="">
+                  <th className="py-3 px-4 border-b text-black">ID</th>
+                  <th className="py-3 px-4 border-b text-black">Name</th>
+                  <th className="py-3 px-4 border-b text-black">Email</th>
+                  <th className="py-3 px-4 border-b text-black">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
                 {currentUsers.map((user) => (
-                  <tr key={user.id} >
+                  <tr key={user.id}>
                     <td className="py-3 px-4 border-b">{user.id}</td>
                     <td className="py-3 px-4 border-b">{user.name}</td>
                     <td className="py-3 px-4 border-b">{user.email}</td>
+
                     <td className="py-3 px-4 border-b flex justify-center gap-2">
-                      <Button size="sm" onClick={() => handleEdit(user.id)} className="flex gap-1 hover:cursor-pointer">
+
+                      {/* EDIT BUTTON FIXED */}
+                      <Button
+                        size="sm"
+                        onClick={() => handleEdit(user.id)}
+                        className="flex gap-1 bg-[var(--edit)] text-[var(--edit-foreground)] hover:opacity-80"
+                      >
                         <Edit size={14} /> Edit
                       </Button>
+
+                      {/* DELETE BUTTON */}
                       <Button
                         size="sm"
                         variant="destructive"
-                        className="flex gap-1 hover:cursor-pointer"
+                        className="flex gap-1"
                         onClick={() => handleDelete(user.id)}
                       >
                         <Trash2 size={14} /> Delete
@@ -106,14 +120,17 @@ export default function UsersPage() {
             </table>
           </div>
 
-          {/* Pagination + Rows Per Page */}
+          {/* Pagination */}
           <div className="mt-6 flex items-center justify-between">
             <Pagination>
               <PaginationContent>
-                {/* Prev */}
                 <PaginationItem>
                   <PaginationPrevious
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    className={
+                      currentPage === 1
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
                     onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                   />
                 </PaginationItem>
@@ -129,24 +146,29 @@ export default function UsersPage() {
                   </PaginationItem>
                 ))}
 
-                {/* Next */}
                 <PaginationItem>
                   <PaginationNext
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(p + 1, totalPages))
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
 
-           
+            {/* Rows Per Page */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">Rows per page:</span>
               <Select
                 value={usersPerPage.toString()}
-                onValueChange={(val) => {
-                  setUsersPerPage(Number(val));
-                  setCurrentPage(1); 
+                onValueChange={(v) => {
+                  setUsersPerPage(Number(v));
+                  setCurrentPage(1);
                 }}
               >
                 <SelectTrigger className="w-[100px]">
@@ -154,9 +176,9 @@ export default function UsersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {[5, 10, 15, 20].map((num) => (
-                      <SelectItem key={num} value={num.toString()}>
-                        {num}
+                    {[5, 10, 15, 20].map((n) => (
+                      <SelectItem key={n} value={n.toString()}>
+                        {n}
                       </SelectItem>
                     ))}
                   </SelectGroup>
