@@ -1,3 +1,5 @@
+
+
 // src/components/Navbar.tsx
 "use client";
 
@@ -30,7 +32,7 @@ const Navbar = () => {
   }, [open]);
   
   return (
-    <nav className=" fixed w-full px-4 py-2 flex justify-between items-center h-16 bg-[var(--app-navbar)] text-[var(--text-primary)] shadow-sm  ">
+    <nav className="w-full px-4 py-2 flex justify-between items-center h-16 bg-[var(--app-navbar)] text-[var(--text-primary)] shadow-sm">
       <div className="text-2xl font-bold">
         <Link href="/" className="hover:opacity-80 transition-opacity">
           NexusCRUD
@@ -46,7 +48,7 @@ const Navbar = () => {
             aria-label="Settings"
             aria-expanded={open}
           >
-            <Settings className="w-5 h-5" />
+            <Settings className="w-5 h-5 hover:text-black" />
           </button>
           {open && <SettingsPanel onClose={() => setOpen(false)} />}
         </div>

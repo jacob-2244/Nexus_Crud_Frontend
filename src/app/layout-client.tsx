@@ -1,3 +1,6 @@
+
+
+
 // @/app/layout-client.tsx
 "use client";
 import React, { useState, useEffect } from "react";
@@ -11,7 +14,6 @@ import { ThemeProvider } from "@/components/Theme-provider";
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const [isMounted, setIsMounted] = useState(false);
   
-  // Select each value separately for better debugging
   const sidebarPosition = useSelector((state: RootState) => {
     console.log("Selector - Full state:", state);
     return state?.ui?.sidebarPosition || "left";
@@ -26,7 +28,6 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     console.log("LayoutClient mounted");
   }, []);
 
- 
   useEffect(() => {
     console.log("=== LAYOUT STATE CHANGED ===");
     console.log("isMounted:", isMounted);
@@ -34,24 +35,26 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     console.log("showFooter:", showFooter);
   }, [sidebarPosition, showFooter, isMounted]);
 
-  const containerClass = `flex flex-1 min-h-0 mt-16 ${
-    isMounted && sidebarPosition === "right" ? "flex-row-reverse" : ""
-  }`;
-
-  console.log("Rendering with containerClass:", containerClass);
-
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <Navbar  />
-      
-      <div className={containerClass}>
+      <div className={`flex h-screen ${isMounted && sidebarPosition === "right" ? "flex-row-reverse" : ""}`}>
+        {/* Sidebar */}
         <Sidebar />
-        <main className="flex-1 px-4 md:px-8 py-6 overflow-auto">
-          {children}
-        </main>
-      </div>
 
-      {isMounted && showFooter && <Footer />}
+        {/* Main Content Area */}
+        <div className="flex flex-col flex-1 overflow-hidden">
+          {/* Navbar */}
+          <Navbar />
+
+          {/* Main Content */}
+          <main className="flex-1 px-4 md:px-8 py-6 overflow-auto">
+            {children}
+          </main>
+
+          {/* Footer */}
+          {isMounted && showFooter && <Footer />}
+        </div>
+      </div>
     </ThemeProvider>
   );
 }
