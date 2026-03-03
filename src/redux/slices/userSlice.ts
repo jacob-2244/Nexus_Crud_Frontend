@@ -1,7 +1,3 @@
-
-
-
-
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/lib/axiosInstance";
 import { User, UserCreateInput, UserUpdateInput } from "@/types/User";

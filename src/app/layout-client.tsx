@@ -52,7 +52,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
           </main>
 
           {/* Footer */}
-          {isMounted && showFooter && <Footer />}
+          {/* {isMounted && showFooter && <Footer />} */}
         </div>
       </div>
     </ThemeProvider>

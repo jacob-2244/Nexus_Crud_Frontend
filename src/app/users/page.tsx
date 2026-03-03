@@ -1,37 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { ColumnDef, VisibilityState } from "@tanstack/react-table";
+
 import { AppDispatch, RootState } from "@/redux/store";
 import { fetchUsers, deleteUser } from "@/redux/slices/userSlice";
-import { useRouter } from "next/navigation";
+
+import { DataTable } from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit, Trash2 } from "lucide-react";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  role?: string;
+  createdAt?: string;
+};
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+ 
+
+
 
 export default function UsersPage() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage, setUsersPerPage] = useState(5);
+
+
+   const handleDelete = (id: number) => {
+    if (confirm("Are you sure?")) dispatch(deleteUser(id));
+  };
+
 
   const { users, loading, error } = useSelector(
     (state: RootState) => state.user
@@ -41,152 +44,99 @@ export default function UsersPage() {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  // const columns: ColumnDef<User>[] = [
+  //   {
+  //     accessorKey: "id",
+  //     header: "ID",
+  //   },
+  //   {
+  //     accessorKey: "name",
+  //     header: "Name",
+  //   },
+  //   {
+  //     accessorKey: "email",
+  //     header: "Email",
+  //   },
+  //   {
+  //     id: "actions",
+  //     header: "Actions",
+  //     cell: ({ row }) => {
+  //       const user = row.original;
+  //       return (
+  //         <div className="flex gap-2">
+  //           <Button size="sm" onClick={() => router.push(`/users/${user.id}`)}>
+  //             <Edit size={14} />
+  //           </Button>
+  //           <Button
+  //             size="sm"
+  //             variant="destructive"
+  //             onClick={()=> handleDelete(user.id)}
+  //           >
+  //             <Trash2 size={14} />
+  //           </Button>
+  //         </div>
+  //       );
+  //     },
+  //   },
+  // ];
+const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
 
-  const currentUsers = users.slice(
-    (currentPage - 1) * usersPerPage,
-    currentPage * usersPerPage
-  );
+  // 🔽 OPTIONAL FIELDS
+  {
+    accessorKey: "role",
+    header: "Role",
+    enableHiding: true,
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created At",
+    cell: ({ getValue }) =>
+      getValue()
+        ? new Date(getValue() as string).toLocaleDateString()
+        : "-",
+    enableHiding: true,
+  },
 
-  const handleCreate = () => router.push("/users/create");
-  const handleEdit = (id: number) => router.push(`/users/${id}`);
-  const handleDelete = (id: number) => {
-    if (!confirm("Are you sure?")) return;
-    dispatch(deleteUser(id));
-  };
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => { /* unchanged */ },
+  },
+];
+
+const [columnVisibility, setColumnVisibility] =
+  React.useState<VisibilityState>({
+    role: false,
+    createdAt: false,
+  });
 
   return (
-    <div className="p-6 max-w-5xl mx-auto w-full ">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">User Management</h1>
-
-       <Button
-          className="flex items-center gap-2 bg-white text-black dark:bg-[var(--edit)] dark:text-white"
-          onClick={handleCreate}
-        >
+    <div className="p-6 max-w-6xl mx-auto space-y-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold">User Management</h1>
+        <Button onClick={() => router.push("/users/create")}>
           <Plus size={16} /> Create User
         </Button>
       </div>
 
-      {loading && <p>Loading users...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      {!loading && users.length === 0 && <p>No users found.</p>}
 
-      {!loading && users.length > 0 && (
-        <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full border text-center border-gray-200 rounded">
-              <thead className="bg-gray-100 dark:bg-gray-800 ">
-                <tr className="">
-                  <th className="py-3 px-4 border-b text-black">ID</th>
-                  <th className="py-3 px-4 border-b text-black">Name</th>
-                  <th className="py-3 px-4 border-b text-black">Email</th>
-                  <th className="py-3 px-4 border-b text-black">Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {currentUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td className="py-3 px-4 border-b">{user.id}</td>
-                    <td className="py-3 px-4 border-b">{user.name}</td>
-                    <td className="py-3 px-4 border-b">{user.email}</td>
-
-                    <td className="py-3 px-4 border-b flex justify-center gap-2">
-
-                      {/* EDIT BUTTON FIXED */}
-                      <Button
-                        size="sm"
-                        onClick={() => handleEdit(user.id)}
-                        className="flex gap-1 bg-[var(--edit)] text-[var(--edit-foreground)] hover:opacity-80"
-                      >
-                        <Edit size={14} /> Edit
-                      </Button>
-
-                      {/* DELETE BUTTON */}
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="flex gap-1"
-                        onClick={() => handleDelete(user.id)}
-                      >
-                        <Trash2 size={14} /> Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="mt-6 flex items-center justify-between">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    className={
-                      currentPage === 1
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                  />
-                </PaginationItem>
-
-                {[...Array(totalPages)].map((_, i) => (
-                  <PaginationItem key={i}>
-                    <PaginationLink
-                      isActive={currentPage === i + 1}
-                      onClick={() => setCurrentPage(i + 1)}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <PaginationNext
-                    className={
-                      currentPage === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(p + 1, totalPages))
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-
-            {/* Rows Per Page */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Rows per page:</span>
-              <Select
-                value={usersPerPage.toString()}
-                onValueChange={(v) => {
-                  setUsersPerPage(Number(v));
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-[100px]">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {[5, 10, 15, 20].map((n) => (
-                      <SelectItem key={n} value={n.toString()}>
-                        {n}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <DataTable columns={columns} data={users} />
       )}
     </div>
   );

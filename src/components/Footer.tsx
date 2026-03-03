@@ -10,7 +10,7 @@ const Footer = () => {
     <footer
       className={`
 
-        py-10 px-6 mt-auto shadow-inner border-t border-gray-300 transition-colors duration-300
+       px-6 mt-auto shadow-inner border-t border-gray-300 transition-colors duration-300
       `}
     >
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
