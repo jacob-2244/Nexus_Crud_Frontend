@@ -24,17 +24,17 @@ function SettingsPanel({ onClose }: SettingsPanelProps) {
   };
 
   return (
-    <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-72 absolute right-0 top-full mt-2 z-50">
+    <div className="p-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-xl border border-gray-300 dark:border-gray-700 w-72 absolute right-0 top-full mt-2 z-50">
       {/* Header */}
       <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-base font-semibold flex items-center gap-2 text-black">
-          <SettingsIcon className="w-4 h-4 " />
+        <h3 className="text-base font-semibold flex items-center gap-2">
+          <SettingsIcon className="w-4 h-4" />
           Settings
         </h3>
         {onClose && (
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100  rounded transition-colors"
+            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
             aria-label="Close settings"
           >
             <X className="w-4 h-4" />
@@ -46,13 +46,13 @@ function SettingsPanel({ onClose }: SettingsPanelProps) {
       <div className="space-y-4 mt-4">
         {/* Sidebar Position */}
         <div 
-          className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+          className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
           onClick={handleSidebarToggle}
         >
           <div className="flex items-center gap-3">
             <Sidebar className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             <div>
-              <p className="text-sm  text-black font-medium">{sidebarPosition === "right" ? "Toggle Left" : "Toggle Right"}</p>
+              <p className="text-sm font-medium">{sidebarPosition === "right" ? "Toggle Left" : "Toggle Right"}</p>
               {/* <p className="text-xs text-gray-500 dark:text-gray-400">
                 {sidebarPosition === "right" ? "Right side" : "Left side"}
               </p> */}
@@ -69,13 +69,13 @@ function SettingsPanel({ onClose }: SettingsPanelProps) {
 
         {/* Show Footer */}
         <div 
-          className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+          className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
           onClick={handleFooterToggle}
         >
           <div className="flex items-center gap-3">
             <SettingsIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             <div>
-              <p className="text-sm font-medium text-black">     {showFooter ? "Hide Footer" : "Show Footer"}</p>
+              <p className="text-sm font-medium">{showFooter ? "Hide Footer" : "Show Footer"}</p>
               {/* <p className="text-xs text-gray-500 dark:text-gray-400">
                 {showFooter ? "Visible" : "Hidden"}
               </p> */}

@@ -47,7 +47,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`flex flex-col pt-4 pb-20 h-full dark:text-white border border-gray-200 rounded transition-all duration-300 ${
+      className={`flex flex-col pt-4 pb-20 h-full border border-gray-200 dark:border-gray-700 rounded transition-all duration-300 ${
         isExpanded ? "w-64" : "w-20"
       }`}
     >
@@ -55,7 +55,7 @@ const Sidebar = () => {
       <div className="flex justify-end px-4 mb-6">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="p-2 hover:text-black hover:bg-gray-100 dark:hover:text-black dark:hover:bg-gray-800 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
           aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
         >
           {isExpanded ? (
@@ -78,7 +78,7 @@ const Sidebar = () => {
               <div className="flex items-center">
                 <Link
                   href={item.href}
-                  className="flex items-center gap-3 px-3 py-2 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex-1"
+                  className="flex items-center gap-3 px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors flex-1"
                 >
                   <Icon className="w-5 h-5 flex-shrink-0" />
                   {isExpanded && (
@@ -92,7 +92,7 @@ const Sidebar = () => {
                 {isExpanded && (
                   <button
                     onClick={() => toggleDropdown(item.label)}
-                    className="p-2 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
                   >
                     <ChevronDown
                       className={`w-4 h-4 transition-transform duration-200 ${
@@ -136,7 +136,7 @@ const Sidebar = () => {
 
       {/* Logout Button */}
       <div className="px-3">
-        <button className="flex items-center gap-3 px-3 py-2 w-full hover:bg-gray-100 hover:text-black dark:hover:bg-gray-800 rounded-lg hover:cursor-pointer transition-colors">
+        <button className="flex items-center gap-3 px-3 py-2 w-full hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg hover:cursor-pointer transition-colors">
           <LogOut className="w-5 h-5 flex-shrink-0" />
           {isExpanded && (
             <span className="text-sm font-medium whitespace-nowrap">

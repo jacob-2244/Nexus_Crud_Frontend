@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 :root {
   --app-background: #ffffff;
   --app-navbar: #ffffff;

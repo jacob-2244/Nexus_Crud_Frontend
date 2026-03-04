@@ -32,11 +32,18 @@ const Navbar = () => {
   }, [open]);
   
   return (
-    <nav className="w-full px-4 py-2 flex justify-between items-center h-16 bg-[var(--app-navbar)] text-[var(--text-primary)] shadow-sm">
+    <nav className="w-full px-4 py-2 flex justify-between items-center h-16 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm border-b border-gray-300 dark:border-gray-700">
       <div className="text-2xl font-bold">
-        <Link href="/" className="hover:opacity-80 transition-opacity">
+        {/* <Link href="/" className="hover:opacity-80 transition-opacity">
           NexusCRUD
-        </Link>
+        </Link> */}
+        <Image
+          src="/assets/images/logo.png"
+          alt="NexusCRUD Logo"
+          width={150}
+          height={150}
+          className="inline-block mr-2"
+        />
       </div>
 
       <div className="flex items-center gap-4">
@@ -44,11 +51,11 @@ const Navbar = () => {
         <div className="relative" ref={settingsRef}>
           <button 
             onClick={() => setOpen(!open)} 
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors relative"
+            className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
             aria-label="Settings"
             aria-expanded={open}
           >
-            <Settings className="w-5 h-5 hover:text-black" />
+            <Settings className="w-5 h-5" />
           </button>
           {open && <SettingsPanel onClose={() => setOpen(false)} />}
         </div>
