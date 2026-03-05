@@ -2,22 +2,134 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========== LIGHT MODE (Default) ========== */
 :root {
+  /* App Colors */
   --app-background: #ffffff;
   --app-navbar: #ffffff;
   --text-primary: #000000;
 
+  /* Status Colors */
   --edit: #2563eb;
   --edit-foreground: #ffffff;
-
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-
   --btn-bg: #000000;
+
+  /* Table Colors */
+  --table-bg: #ffffff;
+  --table-header-bg: #f3f4f6;
+  --table-row-alternate-bg: #f9fafb;
+  --table-border: #e5e7eb;
+  --table-text: #111827;
+  --table-hover-bg: #f0f1f3;
+
+  /* Input/Form Colors */
+  --form-bg: #ffffff;
+  --form-border: #d1d5db;
+  --form-text: #111827;
+  --form-placeholder: #9ca3af;
+
+  /* Dropdown Colors */
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #e5e7eb;
+  --dropdown-text: #111827;
+  --dropdown-hover-bg: #f3f4f6;
+  --dropdown-hover-text: #000000;
+
+  /* Button Colors */
+  --button-bg: #ffffff;
+  --button-border: #d1d5db;
+  --button-text: #111827;
+  --button-hover-bg: #f3f4f6;
 }
 
+/* ========== DARK MODE ========== */
 .dark {
   --app-background: #191f25;
   --app-navbar: #252f3e;
   --text-primary: #ffffff;
+
+  /* Table Colors */
+  --table-bg: #1f2937;
+  --table-header-bg: #111827;
+  --table-row-alternate-bg: #111827;
+  --table-border: #374151;
+  --table-text: #f3f4f6;
+  --table-hover-bg: #374151;
+
+  /* Input/Form Colors */
+  --form-bg: #1f2937;
+  --form-border: #4b5563;
+  --form-text: #f3f4f6;
+  --form-placeholder: #9ca3af;
+
+  /* Dropdown Colors */
+  --dropdown-bg: #1f2937;
+  --dropdown-border: #374151;
+  --dropdown-text: #f3f4f6;
+  --dropdown-hover-bg: #374151;
+  --dropdown-hover-text: #ffffff;
+
+  /* Button Colors */
+  --button-bg: #374151;
+  --button-border: #4b5563;
+  --button-text: #f3f4f6;
+  --button-hover-bg: #4b5563;
+}
+
+/* ========== GLOBAL TABLE STYLES ========== */
+table {
+  background-color: var(--table-bg);
+  color: var(--table-text);
+}
+
+thead {
+  background-color: var(--table-header-bg);
+  color: var(--table-text);
+}
+
+tbody tr {
+  border-color: var(--table-border);
+}
+
+tbody tr:hover {
+  background-color: var(--table-hover-bg);
+}
+
+/* ========== GLOBAL FORM STYLES ========== */
+input,
+textarea,
+select {
+  background-color: var(--form-bg);
+  color: var(--form-text);
+  border-color: var(--form-border);
+}
+
+input::placeholder {
+  color: var(--form-placeholder);
+}
+
+/* ========== GLOBAL BUTTON STYLES ========== */
+button[type="button"],
+button[type="submit"] {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border-color: var(--button-border);
+}
+
+button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+/* ========== DROPDOWN STYLING ========== */
+[data-slot="dropdown-menu-content"] {
+  background-color: var(--dropdown-bg);
+  border-color: var(--dropdown-border);
+  color: var(--dropdown-text);
+}
+
+[data-slot="dropdown-menu-item"]:hover {
+  background-color: var(--dropdown-hover-bg);
+  color: var(--dropdown-hover-text);
 }

@@ -1,168 +1,102 @@
-// src/components/Sidebar.tsx
 "use client";
+
 import Link from "next/link";
-import { LogOut, ChevronRight, ChevronLeft, ChevronDown } from "lucide-react";
-import { LayoutDashboardIcon } from "lucide-react";
-import { UsersIcon } from "lucide-react";
-import { InfoIcon } from "lucide-react";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import { sidebarMenu } from "@/constants/sidebarMenu";
+import { useAuth } from "@/contexts/AuthContext";
 
-const Sidebar = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+export default function Sidebar() {
+  const pathname = usePathname();
+  const { user } = useAuth();
+  const role = user?.role || "guest";
 
-  const menuItems = [
-    {
-      href: "/",
-      icon: LayoutDashboardIcon,
-      label: "Dashboard",
-      options: [
-        { label: "Option 1", href: "/option" },
-        { label: "Option 2", href: "/option" },
-      ],
-    },
-    {
-      href: "/users",
-      icon: UsersIcon,
-      label: "Users",
-      options: [
-        { label: "Option 1", href: "/option" },
-        { label: "Option 2", href: "/option" },
-      ],
-    },
-    {
-      href: "/about",
-      icon: InfoIcon,
-      label: "About",
-      options: [
-        { label: "Option 1", href: "/option" },
-        { label: "Option 2", href: "/option" },
-      ],
-    },
-  ];
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
 
-  const toggleDropdown = (label: string) => {
-    setOpenDropdown(openDropdown === label ? null : label);
+  const toggleMenu = (label: string) => {
+    setOpenMenus((prev) =>
+      prev.includes(label)
+        ? prev.filter((item) => item !== label)
+        : [...prev, label]
+    );
   };
 
+  // Auto open active menu
+  useEffect(() => {
+    sidebarMenu.forEach((menu) => {
+      if (menu.children) {
+        menu.children.forEach((child) => {
+          if (pathname.startsWith(child.href || "")) {
+            setOpenMenus((prev) => [...new Set([...prev, menu.label])]);
+          }
+        });
+      }
+    });
+  }, [pathname]);
+
   return (
-    <div
-      className={`flex flex-col pt-4 pb-20 h-full border border-gray-200 dark:border-gray-700 rounded transition-all duration-300 ${
-        isExpanded ? "w-64" : "w-20"
-      }`}
-    >
-      {/* Toggle Button */}
-      <div className="flex justify-end px-4 mb-6">
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
-        >
-          {isExpanded ? (
-            <ChevronLeft className="w-5 h-5" />
-          ) : (
-            <ChevronRight className="w-5 h-5" />
-          )}
-        </button>
-      </div>
+    <aside className="w-64 bg-white dark:bg-gray-900 border-r h-screen overflow-y-auto">
+      <div className="p-4 font-bold text-lg border-b">Admin Panel</div>
 
-      {/* Menu Items */}
-      <div className="flex flex-col space-y-2 px-3">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isOpen = openDropdown === item.label;
+      <nav className="p-2 space-y-2">
+        {sidebarMenu
+          .filter((menu) => menu.roles.includes(role))
+          .map((menu) => {
+            const Icon = menu.icon;
+            const isOpen = openMenus.includes(menu.label);
+            const hasChildren = menu.children?.length;
 
-          return (
-            <div key={item.label} className="space-y-1">
-              {/* Main Menu Item */}
-              <div className="flex items-center">
-                <Link
-                  href={item.href}
-                  className="flex items-center gap-3 px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors flex-1"
+            return (
+              <div key={menu.label}>
+                {/* Parent */}
+                <div
+                  className={`flex items-center justify-between px-3 py-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800`}
+                  onClick={() => hasChildren && toggleMenu(menu.label)}
                 >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  {isExpanded && (
-                    <span className="text-sm font-medium whitespace-nowrap">
-                      {item.label}
-                    </span>
-                  )}
-                </Link>
+                  <div className="flex items-center gap-2">
+                    {Icon && <Icon size={18} />}
+                    {menu.href ? (
+                      <Link href={menu.href}>{menu.label}</Link>
+                    ) : (
+                      <span>{menu.label}</span>
+                    )}
+                  </div>
 
-                {/* Dropdown Toggle */}
-                {isExpanded && (
-                  <button
-                    onClick={() => toggleDropdown(item.label)}
-                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                  >
+                  {hasChildren && (
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
+                      size={16}
+                      className={`transition-transform ${
                         isOpen ? "rotate-180" : ""
                       }`}
                     />
-                  </button>
+                  )}
+                </div>
+
+                {/* Children */}
+                {hasChildren && isOpen && (
+                  <div className="ml-6 mt-1 space-y-1">
+                    {menu.children
+                      ?.filter((child) => child.roles.includes(role))
+                      .map((child) => (
+                        <Link
+                          key={child.label}
+                          href={child.href!}
+                          className={`block px-3 py-1 rounded text-sm ${
+                            pathname === child.href
+                              ? "bg-blue-500 text-white"
+                              : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                          }`}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                  </div>
                 )}
               </div>
-
-              {/* Dropdown Options */}
-              {isExpanded && isOpen && (
-                <div className="ml-8 space-y-1 animate-slideDown">
-                  {/* {item.options.map((option) => (
-                    <Link
-                      key={option.href}
-                      href={option.href}
-                      className="block px-3 py-2 text-sm  dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                    >
-                      {option.label}
-                    </Link>
-                  ))} */}
-                  {item.options.map((option, index) => (
-                    <Link
-                      key={`${option.label}-${index}`}
-                      href={option.href}
-                      className="block px-3 py-2 text-sm dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                    >
-                      {option.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Spacer */}
-      <div className="flex-1"></div>
-
-      {/* Logout Button */}
-      <div className="px-3">
-        <button className="flex items-center gap-3 px-3 py-2 w-full hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg hover:cursor-pointer transition-colors">
-          <LogOut className="w-5 h-5 flex-shrink-0" />
-          {isExpanded && (
-            <span className="text-sm font-medium whitespace-nowrap">
-              Logout
-            </span>
-          )}
-        </button>
-      </div>
-
-      <style jsx>{`
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slideDown {
-          animation: slideDown 0.2s ease-out;
-        }
-      `}</style>
-    </div>
+            );
+          })}
+      </nav>
+    </aside>
   );
-};
-
-export default Sidebar;
+}

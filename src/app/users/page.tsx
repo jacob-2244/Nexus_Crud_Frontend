@@ -42,7 +42,7 @@ export default function UsersPage() {
   }, [dispatch]);
 
   // manage columns in state so we can add new ones dynamically
-  const [columns, setColumns] = React.useState<ColumnDef<User>[]>([
+  const columns: ColumnDef<User>[] = [
     {
       accessorKey: "id",
       header: "ID",
@@ -54,21 +54,6 @@ export default function UsersPage() {
     {
       accessorKey: "email",
       header: "Email",
-    },
-    // optional fields
-    {
-      accessorKey: "role",
-      header: "Role",
-      enableHiding: true,
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Created At",
-      cell: ({ getValue }) =>
-        getValue()
-          ? new Date(getValue() as string).toLocaleDateString()
-          : "-",
-      enableHiding: true,
     },
     {
       id: "actions",
@@ -95,51 +80,16 @@ export default function UsersPage() {
         );
       },
     },
-  ]);
-
-  // helper to add a new column via prompt (could be replaced by modal)
-  const addColumn = () => {
-    const header = prompt("Column header (display name):");
-    if (!header) return;
-    const key = prompt(
-      "Accessor key (property name in data):",
-      header.toLowerCase().replace(/\s+/g, ""),
-    );
-    if (!key) return;
-    const hide = confirm("Start hidden? (OK = yes)");
-
-    setColumns((prev) => [
-      ...prev,
-      {
-        accessorKey: key,
-        header,
-        enableHiding: true,
-      },
-    ]);
-
-    if (hide) {
-      setColumnVisibility((v) => ({ ...v, [key]: false }));
-    }
-
-    // if initial column should be hidden, we can control via DataTable's own visibility
-    // we don't have direct access here, but the dropdown will hide it once added.
-    // could also store a visibility state and pass down as prop if necessary.
-  };
+  ];
 
 const [columnVisibility, setColumnVisibility] =
-  React.useState<VisibilityState>({
-    role: false,
-    createdAt: false,
-  });
+  React.useState<VisibilityState>({});
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">User Management</h1>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={addColumn}>
-            + Column
-          </Button>
           <Button onClick={() => router.push("/users/create")}> 
             <Plus size={16} /> Create User
           </Button>
