@@ -2,42 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Theme values are defined in src/constants/color.js (light / dark).
+  Keep this file in sync with color.js when adding or renaming variables.
+*/
+
 /* ========== LIGHT MODE (Default) ========== */
 :root {
-  /* App Colors */
   --app-background: #ffffff;
   --app-navbar: #ffffff;
   --text-primary: #000000;
-
-  /* Status Colors */
   --edit: #2563eb;
   --edit-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --btn-bg: #000000;
-
-  /* Table Colors */
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
   --table-bg: #ffffff;
   --table-header-bg: #f3f4f6;
   --table-row-alternate-bg: #f9fafb;
   --table-border: #e5e7eb;
   --table-text: #111827;
   --table-hover-bg: #f0f1f3;
-
-  /* Input/Form Colors */
   --form-bg: #ffffff;
   --form-border: #d1d5db;
   --form-text: #111827;
   --form-placeholder: #9ca3af;
-
-  /* Dropdown Colors */
   --dropdown-bg: #ffffff;
   --dropdown-border: #e5e7eb;
   --dropdown-text: #111827;
   --dropdown-hover-bg: #f3f4f6;
   --dropdown-hover-text: #000000;
-
-  /* Button Colors */
   --button-bg: #ffffff;
   --button-border: #d1d5db;
   --button-text: #111827;
@@ -49,29 +44,27 @@
   --app-background: #191f25;
   --app-navbar: #252f3e;
   --text-primary: #ffffff;
-
-  /* Table Colors */
+  --edit: #2563eb;
+  --edit-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
   --table-bg: #1f2937;
   --table-header-bg: #111827;
   --table-row-alternate-bg: #111827;
   --table-border: #374151;
   --table-text: #f3f4f6;
   --table-hover-bg: #374151;
-
-  /* Input/Form Colors */
   --form-bg: #1f2937;
   --form-border: #4b5563;
   --form-text: #f3f4f6;
   --form-placeholder: #9ca3af;
-
-  /* Dropdown Colors */
   --dropdown-bg: #1f2937;
   --dropdown-border: #374151;
   --dropdown-text: #f3f4f6;
   --dropdown-hover-bg: #374151;
   --dropdown-hover-text: #ffffff;
-
-  /* Button Colors */
   --button-bg: #374151;
   --button-border: #4b5563;
   --button-text: #f3f4f6;

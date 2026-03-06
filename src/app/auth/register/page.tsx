@@ -8,11 +8,13 @@ import { UserRole } from "@/types/User";
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<UserRole>(UserRole.USER);
+  const [role, setRole] = useState<UserRole>(UserRole.MANAGER);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
   const { login } = useAuth();
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
   const handleRegister = async () => {
     if (!name || !email) {
@@ -21,15 +23,16 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
+    setMessage("");
     try {
-      const res = await fetch("http://localhost:4000/users", {
+      const res = await fetch(`${apiUrl}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, role }),
       });
 
       if (!res.ok) {
-        const error = await res.json();
+        const error = await res.json().catch(() => ({}));
         setMessage(error.message || "Registration failed");
         setLoading(false);
         return;
@@ -38,14 +41,15 @@ export default function RegisterPage() {
       const user = await res.json();
       login(user); // save in context/localStorage
 
-      // Redirect based on role
-      if (user.role === "admin") router.push("/dashboard");
-      else if (user.role === "user") router.push("/dashboard");
-      else router.push("/dashboard"); // guest also goes to dashboard
+      router.push("/dashboard");
 
     } catch (err) {
       console.error(err);
-      setMessage("Something went wrong");
+      setMessage(
+        err instanceof TypeError && (err as Error).message === "Failed to fetch"
+          ? "Cannot reach server. Make sure the backend is running on " + apiUrl
+          : "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }
@@ -74,7 +78,7 @@ export default function RegisterPage() {
         onChange={(e) => setRole(e.target.value as UserRole)}
       >
         <option value={UserRole.ADMIN}>Admin</option>
-        <option value={UserRole.USER}>User</option>
+        <option value={UserRole.MANAGER}>Manager</option>
         <option value={UserRole.GUEST}>Guest</option>
       </select>
       <button

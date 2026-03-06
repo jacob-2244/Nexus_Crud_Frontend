@@ -190,7 +190,8 @@ export default function CreateUserPage() {
   async function onSubmit(values: CreateFormValues) {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/users", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+      const res = await fetch(`${apiUrl}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -265,7 +266,7 @@ export default function CreateUserPage() {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                    <SelectItem value={UserRole.USER}>User</SelectItem>
+                    <SelectItem value={UserRole.MANAGER}>Manager</SelectItem>
                     <SelectItem value={UserRole.GUEST}>Guest</SelectItem>
                   </SelectContent>
                 </Select>

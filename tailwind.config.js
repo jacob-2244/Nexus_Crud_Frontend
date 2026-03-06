@@ -1,4 +1,5 @@
-const colors=require("./src/constants/color")
+const { tailwindColors } = require("./src/constants/color");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -6,10 +7,10 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // Enable dark mode with class strategy
+  darkMode: "class",
   theme: {
     extend: {
-      colors:colors
+      colors: tailwindColors,
     },
   },
   plugins: [],

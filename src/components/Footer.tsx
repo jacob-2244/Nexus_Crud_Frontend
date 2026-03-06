@@ -1,68 +1,44 @@
 "use client";
+
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 
 const Footer = () => {
-  const theme = useSelector((state: RootState) => state.theme.mode);
-
   return (
-    <footer
-      className={`
-
-       px-6 mt-auto shadow-inner border-t border-gray-300 transition-colors duration-300
-      `}
-    >
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Company Info */}
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold">NexusCRUD</h2>
-          <p className="text-sm md:text-base">
-            Building seamless CRUD applications with modern technologies. Our goal is to make your workflow smoother and efficient.
-          </p>
+    <footer className="shrink-0 px-4 py-3 bg-gray-100 dark:bg-gray-900 border-t border-gray-300 dark:border-gray-700 shadow-inner">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+        <span className="font-semibold text-gray-800 dark:text-gray-200">NexusCRUD</span>
+        <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
+          <a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            Privacy
+          </a>
+          <a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            Terms
+          </a>
+          <a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            Contact
+          </a>
+          <a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            Support
+          </a>
         </div>
-
-        {/* Quick Links */}
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Quick Links</h3>
-          <ul className="space-y-1">
-            <li>
-              <a href="#" className="hover:text-blue-500 transition-colors duration-200">
-                Privacy
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-500 transition-colors duration-200">
-                Terms
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-500 transition-colors duration-200">
-                Contact
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-500 transition-colors duration-200">
-                Support
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        {/* Social Media */}
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Follow Us</h3>
-          <div className="flex space-x-4">
-            <a href="#" className="hover:text-blue-500 transition-colors duration-200"><Facebook size={20} /></a>
-            <a href="#" className="hover:text-blue-500 transition-colors duration-200"><Twitter size={20} /></a>
-            <a href="#" className="hover:text-blue-500 transition-colors duration-200"><Linkedin size={20} /></a>
-            <a href="#" className="hover:text-blue-500 transition-colors duration-200"><Instagram size={20} /></a>
-          </div>
+        <div className="flex items-center gap-3">
+          <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors" aria-label="Facebook">
+            <Facebook size={16} />
+          </a>
+          <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors" aria-label="Twitter">
+            <Twitter size={16} />
+          </a>
+          <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors" aria-label="LinkedIn">
+            <Linkedin size={16} />
+          </a>
+          <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors" aria-label="Instagram">
+            <Instagram size={16} />
+          </a>
         </div>
       </div>
-
-      {/* Bottom Text */}
-      <div className="mt-8 border-t border-gray-300 pt-4 text-center text-sm md:text-base">
+      <div className="max-w-6xl mx-auto mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 text-center text-xs text-gray-500 dark:text-gray-400">
         &copy; {new Date().getFullYear()} NexusCRUD. All rights reserved.
       </div>
     </footer>
