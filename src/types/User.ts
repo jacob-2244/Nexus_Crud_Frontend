@@ -1,4 +1,4 @@
-
+// src/types/User.ts
 export enum UserRole {
   ADMIN = "admin",
   MANAGER = "manager",
