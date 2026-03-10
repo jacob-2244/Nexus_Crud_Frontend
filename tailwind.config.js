@@ -1,5 +1,5 @@
 const { tailwindColors } = require("./src/constants/color");
-
+console.log(tailwindColors)
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -10,7 +10,7 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
-      colors: tailwindColors,
+      colors: {...tailwindColors , yaqoob: 'var(--yaqoob)', } ,
     },
   },
   plugins: [],

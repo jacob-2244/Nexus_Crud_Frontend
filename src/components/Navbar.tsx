@@ -9,7 +9,6 @@ import { ThemeToggle } from "./Theme-toggle";
 import SettingsPanel from "@/components/SettingsPanel";
 import { Settings } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
@@ -30,9 +29,8 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [open]);
-  
   return (
-    <nav className="w-full px-4 py-2 flex justify-between items-center h-16 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm border-b border-gray-300 dark:border-gray-700">
+    <nav className="w-full bg-yaqoob px-4 py-2 flex justify-between items-center h-16   text-gray-900 shadow-sm border-b border-gray-300 ">
       <div className="text-2xl font-bold">
         {/* <Link href="/" className="hover:opacity-80 transition-opacity">
           NexusCRUD

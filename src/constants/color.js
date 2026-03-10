@@ -6,7 +6,7 @@
 const light = {
   // App
   appBackground: "#ffffff",
-  appNavbar: "#ffffff",
+  appNavbar: "#00FF00",
   textPrimary: "#000000",
 
   // Status / Actions
