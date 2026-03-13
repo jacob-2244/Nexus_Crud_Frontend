@@ -1,69 +1,3 @@
-// // src/contexts/AuthContext.tsx
-// "use client";
-
-// import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-// import { User, UserRole } from "@/types/User";
-
-// interface AuthContextType {
-//   user: User | null;
-//   login: (user: User) => void;
-//   logout: () => void;
-//   isAuthenticated: boolean;
-//   hasRole: (role: UserRole) => boolean;
-//   isLoading: boolean;
-// }
-
-// const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// interface AuthProviderProps {
-//   children: ReactNode;
-// }
-
-// export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-//   const [user, setUser] = useState<User | null>(null);
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     const storedUser = localStorage.getItem("currentUser");
-//     if (storedUser) {
-//       try {
-//         setUser(JSON.parse(storedUser));
-//       } catch {
-//         localStorage.removeItem("currentUser");
-//       }
-//     }
-//     setIsLoading(false);
-//   }, []);
-
-//   const login = (userData: User) => {
-//     setUser(userData);
-//     localStorage.setItem("currentUser", JSON.stringify(userData));
-//   };
-
-//   const logout = () => {
-//     setUser(null);
-//     localStorage.removeItem("currentUser");
-//   };
-
-//   const isAuthenticated = user !== null;
-//   const hasRole = (role: UserRole) => user?.role === role;
-
-//   return (
-//     <AuthContext.Provider value={{ user, login, logout, isAuthenticated, hasRole, isLoading }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export const useAuth = () => {
-//   const context = useContext(AuthContext);
-//   if (!context) throw new Error("useAuth must be used within AuthProvider");
-//   return context;
-// };
-
-
-
-
 // src/contexts/AuthContext.tsx
 "use client";
 
@@ -73,8 +7,9 @@ import { MenuItem } from "@/hooks/useMenu";
 
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   menu: MenuItem[];
-  login: (userData: User, menuData: MenuItem[]) => void;
+  login: (userData: User, menuData: MenuItem[], token: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -82,60 +17,101 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("currentUser");
-    const storedMenu = localStorage.getItem("currentMenu");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        localStorage.removeItem("currentUser");
-      }
+    const storedToken = localStorage.getItem("authToken");
+
+    if (!storedToken) {
+      // No token — not logged in
+      setIsLoading(false);
+      return;
     }
-    if (storedMenu) {
-      try {
-        setMenu(JSON.parse(storedMenu));
-      } catch {
-        localStorage.removeItem("currentMenu");
-      }
-    }
-    setIsLoading(false);
+
+    // CRITICAL: Always verify the token with the backend on every page load.
+    // We NEVER trust the role/user stored in localStorage directly.
+    // If someone edits localStorage, the token still has the original role
+    // signed by the server — so /auth/me will return the real role.
+    fetch(`${API_URL}/auth/me`, {
+      headers: { Authorization: `Bearer ${storedToken}` },
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          // Token invalid or expired — force logout
+          clearSession();
+          return;
+        }
+
+        const verifiedUser: User = await res.json();
+
+        // Use the backend-verified user, ignore anything in localStorage user object
+        setUser(verifiedUser);
+        setToken(storedToken);
+
+        // Update localStorage user with the verified data
+        localStorage.setItem("currentUser", JSON.stringify(verifiedUser));
+      })
+      .catch(() => {
+        // Network error — fall back to cached user but keep token
+        // Menu will still be fetched fresh via useMenu hook
+        const storedUser = localStorage.getItem("currentUser");
+        if (storedUser) {
+          try { setUser(JSON.parse(storedUser)); } catch { clearSession(); }
+        } else {
+          clearSession();
+        }
+        setToken(storedToken);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
-  const login = (userData: User, menuData: MenuItem[]) => {
-    setUser(userData);
-    setMenu(menuData);
-    localStorage.setItem("currentUser", JSON.stringify(userData));
-    localStorage.setItem("currentMenu", JSON.stringify(menuData));
-  };
-
-  const logout = () => {
+  const clearSession = () => {
     setUser(null);
+    setToken(null);
     setMenu([]);
     localStorage.removeItem("currentUser");
     localStorage.removeItem("currentMenu");
+    localStorage.removeItem("authToken");
   };
 
-  const isAuthenticated = user !== null;
+  const login = (userData: User, menuData: MenuItem[], authToken: string) => {
+    setUser(userData);
+    setMenu(menuData);
+    setToken(authToken);
+    localStorage.setItem("currentUser", JSON.stringify(userData));
+    localStorage.setItem("currentMenu", JSON.stringify(menuData));
+    localStorage.setItem("authToken", authToken);
+  };
+
+  const logout = () => {
+    clearSession();
+  };
 
   return (
-    <AuthContext.Provider value={{ user, menu, login, logout, isAuthenticated, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        menu,
+        login,
+        logout,
+        isAuthenticated: user !== null && token !== null,
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 };

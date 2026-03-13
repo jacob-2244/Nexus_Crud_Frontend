@@ -1,3 +1,4 @@
+//src/app/users/acitve/page.tsx
 import PageTemplate from "@/components/PageTemplate";
 
 export default function ActiveUsersPage() {

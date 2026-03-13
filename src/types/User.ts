@@ -1,5 +1,6 @@
 // src/types/User.ts
 export enum UserRole {
+  SUPERADMIN="superadmin",
   ADMIN = "admin",
   MANAGER = "manager",
   GUEST = "guest",
